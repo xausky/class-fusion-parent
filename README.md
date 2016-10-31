@@ -1,0 +1,1 @@
+# class-funsion-maven-plugin
