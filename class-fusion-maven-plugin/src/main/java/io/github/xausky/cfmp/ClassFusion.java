@@ -1,11 +1,13 @@
 package io.github.xausky.cfmp;
 
-import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -14,19 +16,38 @@ import java.util.TreeSet;
  * Created by xausky on 11/1/16.
  */
 public class ClassFusion {
-    public static void fusion(ClassWriter writer, String name, Set<String> imps, Map<String,ClassNode> classes){
+    public static void fusion(ClassWriter writer, String name, Set<String> imps, Map<String,ClassNode> classes)
+            throws MethodNameConflict, FieldNameConflict {
         FusionClassVisitor visitor = new FusionClassVisitor(writer, imps, name);
         Set<String> interfaces = new TreeSet<String>();
+        Set<String> methods = new TreeSet<String>();
+        Set<String> fields = new TreeSet<String>();
+        imps.add(name);
         for(String imp:imps){
             ClassNode root = classes.get(imp);
             if(root!=null){
+                //检查同名函数
+                for(MethodNode method:(List<MethodNode>)root.methods){
+                    if(!method.name.equals("<init>")){
+                        if(!methods.add(method.name)){
+                            throw new MethodNameConflict(String.format(
+                                    "method name conflict class: %s, method name:%s please check and clean maven project."
+                                    ,imp,method.name));
+                        }
+                    }
+                }
+                //检查同名属性
+                for(FieldNode field:(List<FieldNode>)root.fields){
+                    if(!fields.add(field.name)){
+                        throw new FieldNameConflict(String.format(
+                                "field name conflict class: %s, field name:%s please check and clean maven project."
+                                ,imp,field.name));
+                    }
+                    System.out.printf("FieldNode name:%s, desc:%s\n",field.name,field.desc);
+                }
                 interfaces.addAll(root.interfaces);
                 root.accept(visitor);
             }
-        }
-        ClassNode root = classes.get(name);
-        if(root!=null){
-            root.accept(visitor);
         }
         //修改定义，添加接口
         writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, "java/lang/Object", (String[]) interfaces.toArray(new String[interfaces.size()]));

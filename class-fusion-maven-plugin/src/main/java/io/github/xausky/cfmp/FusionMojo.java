@@ -67,7 +67,7 @@ public class FusionMojo extends AbstractMojo {
                 FileUtils.forceMkdir(classfile.getParentFile());
                 FileUtils.writeByteArrayToFile(classfile,writer.toByteArray());
             }catch (Exception e){
-                e.printStackTrace();
+                throw new MojoFailureException(e.getMessage());
             }
         }
     }
