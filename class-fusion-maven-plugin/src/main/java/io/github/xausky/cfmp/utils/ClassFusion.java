@@ -20,7 +20,7 @@ import java.util.TreeSet;
  */
 public class ClassFusion {
     public static void fusion(ClassWriter writer, String name, Set<String> imps, Map<String,ClassNode> classes)
-            throws MethodNameConflictException, FieldNameConflictException {
+            throws MethodNameConflictException, FieldNameConflictException, ClassNotFoundException {
         FusionClassVisitor visitor = new FusionClassVisitor(writer, imps, name);
         Set<String> interfaces = new TreeSet<String>();
         Set<String> methods = new TreeSet<String>();
@@ -49,6 +49,8 @@ public class ClassFusion {
                 }
                 interfaces.addAll(root.interfaces);
                 root.accept(visitor);
+            }else {
+                throw new ClassNotFoundException(String.format("fusion required class %s not found, please check regex.",imp));
             }
         }
         //修改定义，添加接口

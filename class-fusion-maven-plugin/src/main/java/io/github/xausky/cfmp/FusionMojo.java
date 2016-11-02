@@ -1,9 +1,6 @@
 package io.github.xausky.cfmp;
 
-import io.github.xausky.cfmp.utils.ClassFusion;
-import io.github.xausky.cfmp.utils.FusionArtifactFilter;
-import io.github.xausky.cfmp.utils.JarParser;
-import io.github.xausky.cfmp.utils.PathParser;
+import io.github.xausky.cfmp.utils.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
@@ -37,6 +34,12 @@ public class FusionMojo extends AbstractMojo {
     @Parameter( defaultValue = "${session}", readonly = true, required = true )
     private MavenSession session;
 
+    @Parameter( defaultValue = ".*", readonly = true, required = true )
+    private String groupRegex;
+
+    @Parameter( defaultValue = ".*", readonly = true, required = true )
+    private String artifactRegex;
+
     @Component( hint = "default" )
     private DependencyGraphBuilder dependencyGraphBuilder;
 
@@ -48,17 +51,19 @@ public class FusionMojo extends AbstractMojo {
             Set<File> artifactFiles = new TreeSet<>();
 
             //获取所有依赖jar包和class路径
-            ProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest(session.getProjectBuildingRequest());
+            ProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest(
+                    session.getProjectBuildingRequest());
             buildingRequest.setProject(project);
-            DependencyNode rootNode = dependencyGraphBuilder.buildDependencyGraph(buildingRequest, new FusionArtifactFilter());
+            DependencyNode rootNode = dependencyGraphBuilder.buildDependencyGraph(buildingRequest,
+                    new RegexArtifactFilter(groupRegex,artifactRegex));
             CollectingDependencyNodeVisitor visitor = new CollectingDependencyNodeVisitor();
             rootNode.accept(visitor);
             List<DependencyNode> nodes = visitor.getNodes();
-            for (DependencyNode dependencyNode : nodes) {
-                Artifact artifact = dependencyNode.getArtifact();
+            for (DependencyNode node : nodes) {
+                Artifact artifact = node.getArtifact();
                 artifactFiles.add(artifact.getFile());
             }
-
+            getLog().info(String.format("artifacts count : %d artifacts",artifactFiles.size()));
             for (File file : artifactFiles) {
                 if (file.isDirectory()) {
                     //目录形式的class路径
@@ -83,7 +88,6 @@ public class FusionMojo extends AbstractMojo {
                 FileUtils.forceMkdir(classfile.getParentFile());
                 FileUtils.writeByteArrayToFile(classfile, writer.toByteArray());
             }
-            getLog().info(String.format("artifacts count : %d artifacts",artifactFiles.size()));
             getLog().info(String.format("fusion time     : %d ms.", System.currentTimeMillis() - start));
         }catch (Exception e){
             e.printStackTrace();
