@@ -3,19 +3,17 @@ package io.github.xausky.cfmp;
 import io.github.xausky.cfmp.utils.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.execution.MavenSession;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
-import org.apache.maven.shared.dependency.graph.DependencyNode;
-import org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor;
+import org.apache.maven.shared.dependency.tree.DependencyNode;
+import org.apache.maven.shared.dependency.tree.DependencyTreeBuilder;
+import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -28,20 +26,14 @@ import java.util.*;
 @Mojo(name = "fusion")
 public class FusionMojo extends AbstractMojo {
 
-    @Parameter( defaultValue = "${project}", readonly = true, required = true )
+    @Component
     private MavenProject project;
 
-    @Parameter( defaultValue = "${session}", readonly = true, required = true )
-    private MavenSession session;
+    @Component
+    private DependencyTreeBuilder dependencyTreeBuilder;
 
-    @Parameter( defaultValue = ".*", readonly = true, required = true )
-    private String groupRegex;
-
-    @Parameter( defaultValue = ".*", readonly = true, required = true )
-    private String artifactRegex;
-
-    @Component( hint = "default" )
-    private DependencyGraphBuilder dependencyGraphBuilder;
+    @Parameter( defaultValue = "${localRepository}", readonly = true )
+    private ArtifactRepository localRepository;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
@@ -51,20 +43,25 @@ public class FusionMojo extends AbstractMojo {
             Set<File> artifactFiles = new TreeSet<>();
 
             //获取所有依赖jar包和class路径
-            ProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest(
-                    session.getProjectBuildingRequest());
-            buildingRequest.setProject(project);
-            DependencyNode rootNode = dependencyGraphBuilder.buildDependencyGraph(buildingRequest,
-                    new RegexArtifactFilter(groupRegex,artifactRegex));
+            DependencyNode rootNode = dependencyTreeBuilder.buildDependencyTree(project,localRepository,
+                    new AllArtifactFilter());
             CollectingDependencyNodeVisitor visitor = new CollectingDependencyNodeVisitor();
             rootNode.accept(visitor);
             List<DependencyNode> nodes = visitor.getNodes();
             for (DependencyNode node : nodes) {
-                Artifact artifact = node.getArtifact();
-                artifactFiles.add(artifact.getFile());
+                //排除不依赖class-fusion-core的artifact
+                if(FusionDependencyFilter.include(node)){
+                    Artifact artifact = node.getArtifact();
+                    File file = artifact.getFile();
+                    if(file == null){
+                        file = localRepository.find(artifact).getFile();
+                    }
+                    artifactFiles.add(file);
+                }
             }
             getLog().info(String.format("artifacts count : %d artifacts",artifactFiles.size()));
             for (File file : artifactFiles) {
+                getLog().info("artifact file   : " + file.getName());
                 if (file.isDirectory()) {
                     //目录形式的class路径
                     PathParser.parser(file, classes, imps);
