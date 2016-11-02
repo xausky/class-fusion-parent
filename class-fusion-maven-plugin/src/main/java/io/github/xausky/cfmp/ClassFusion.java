@@ -43,7 +43,6 @@ public class ClassFusion {
                                 "field name conflict class: %s, field name:%s please check and clean maven project."
                                 ,imp,field.name));
                     }
-                    System.out.printf("FieldNode name:%s, desc:%s\n",field.name,field.desc);
                 }
                 interfaces.addAll(root.interfaces);
                 root.accept(visitor);
