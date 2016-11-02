@@ -1,4 +1,4 @@
-package io.github.xausky.cfmp;
+package io.github.xausky.cfmp.utils;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;

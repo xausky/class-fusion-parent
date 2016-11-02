@@ -1,7 +1,6 @@
-package io.github.xausky.cfmp;
+package io.github.xausky.cfmp.utils;
 
 import org.apache.commons.io.IOUtils;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;

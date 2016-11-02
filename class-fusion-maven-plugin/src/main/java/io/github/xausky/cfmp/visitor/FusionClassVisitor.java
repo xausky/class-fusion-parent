@@ -1,4 +1,4 @@
-package io.github.xausky.cfmp;
+package io.github.xausky.cfmp.visitor;
 
 import org.objectweb.asm.*;
 

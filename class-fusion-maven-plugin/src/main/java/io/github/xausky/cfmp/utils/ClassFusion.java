@@ -1,5 +1,8 @@
-package io.github.xausky.cfmp;
+package io.github.xausky.cfmp.utils;
 
+import io.github.xausky.cfmp.visitor.FusionClassVisitor;
+import io.github.xausky.cfmp.execption.FieldNameConflictException;
+import io.github.xausky.cfmp.execption.MethodNameConflictException;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -17,7 +20,7 @@ import java.util.TreeSet;
  */
 public class ClassFusion {
     public static void fusion(ClassWriter writer, String name, Set<String> imps, Map<String,ClassNode> classes)
-            throws MethodNameConflict, FieldNameConflict {
+            throws MethodNameConflictException, FieldNameConflictException {
         FusionClassVisitor visitor = new FusionClassVisitor(writer, imps, name);
         Set<String> interfaces = new TreeSet<String>();
         Set<String> methods = new TreeSet<String>();
@@ -30,7 +33,7 @@ public class ClassFusion {
                 for(MethodNode method:(List<MethodNode>)root.methods){
                     if(!method.name.equals("<init>")){
                         if(!methods.add(method.name)){
-                            throw new MethodNameConflict(String.format(
+                            throw new MethodNameConflictException(String.format(
                                     "method name conflict class: %s, method name:%s please check and clean maven project."
                                     ,imp,method.name));
                         }
@@ -39,7 +42,7 @@ public class ClassFusion {
                 //检查同名属性
                 for(FieldNode field:(List<FieldNode>)root.fields){
                     if(!fields.add(field.name)){
-                        throw new FieldNameConflict(String.format(
+                        throw new FieldNameConflictException(String.format(
                                 "field name conflict class: %s, field name:%s please check and clean maven project."
                                 ,imp,field.name));
                     }

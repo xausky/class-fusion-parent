@@ -1,15 +1,10 @@
-package io.github.xausky.cfmp;
+package io.github.xausky.cfmp.utils;
 
 import org.apache.commons.io.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 /**
  * Created by xausky on 11/1/16.
