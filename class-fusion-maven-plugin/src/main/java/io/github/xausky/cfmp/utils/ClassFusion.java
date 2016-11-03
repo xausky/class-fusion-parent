@@ -29,7 +29,6 @@ public class ClassFusion {
         impls.add(name);
         FusionClassVisitor visitor = new FusionClassVisitor(writer, impls, name);
         for(String imp:impls){
-            System.out.println("now fusion class:"+imp);
             ClassNode root = classes.get(imp);
             if(root!=null){
                 //检查同名函数
