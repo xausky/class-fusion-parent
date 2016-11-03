@@ -1,12 +1,12 @@
 package io.github.xausky.cfmpe.impl;
 
-import io.github.xausky.cfc.FusionClass;
+import io.github.xausky.cfc.FusionImpl;
 import io.github.xausky.cfmpe.UserInterface;
 
 /**
  * Created by xausky on 10/31/16.
  */
-@FusionClass
+@FusionImpl
 public class UserImpl implements UserInterface {
     private Integer id;
     private String name;

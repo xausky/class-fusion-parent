@@ -1,12 +1,12 @@
 package io.github.xausky.cfmpe.impl;
 
-import io.github.xausky.cfc.FusionClass;
+import io.github.xausky.cfc.FusionImpl;
 import io.github.xausky.cfmpe.MenuInterface;
 
 /**
  * Created by xausky on 11/1/16.
  */
-@FusionClass
+@FusionImpl
 public class MenuImpl implements MenuInterface{
     private String name;
 

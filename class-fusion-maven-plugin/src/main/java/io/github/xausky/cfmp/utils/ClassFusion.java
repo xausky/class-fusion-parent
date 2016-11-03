@@ -10,23 +10,26 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Created by xausky on 11/1/16.
  */
 public class ClassFusion {
-    public static void fusion(ClassWriter writer, String name, Set<String> imps, Map<String,ClassNode> classes)
+    public static void fusion(ClassWriter writer, String name, Set<String> itfs, Map<String, String> imps, Map<String,ClassNode> classes)
             throws MethodNameConflictException, FieldNameConflictException, ClassNotFoundException {
-        FusionClassVisitor visitor = new FusionClassVisitor(writer, imps, name);
-        Set<String> interfaces = new TreeSet<String>();
-        Set<String> methods = new TreeSet<String>();
-        Set<String> fields = new TreeSet<String>();
-        imps.add(name);
-        for(String imp:imps){
+        //impls必须保证有序
+        List<String> impls = new LinkedList<>();
+
+        Set<String> methods = new HashSet<>();
+        Set<String> fields = new HashSet<>();
+        for(String itf:itfs){
+            impls.add(imps.get(itf));
+        }
+        impls.add(name);
+        FusionClassVisitor visitor = new FusionClassVisitor(writer, impls, name);
+        for(String imp:impls){
+            System.out.println("now fusion class:"+imp);
             ClassNode root = classes.get(imp);
             if(root!=null){
                 //检查同名函数
@@ -47,14 +50,13 @@ public class ClassFusion {
                                 ,imp,field.name));
                     }
                 }
-                interfaces.addAll(root.interfaces);
                 root.accept(visitor);
             }else {
-                throw new ClassNotFoundException(String.format("fusion required class %s not found, please check regex.",imp));
+                throw new ClassNotFoundException("fusion class not found:"+imp);
             }
         }
         //修改定义，添加接口
-        writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, "java/lang/Object", (String[]) interfaces.toArray(new String[interfaces.size()]));
+        writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name, null, "java/lang/Object", (String[]) itfs.toArray(new String[itfs.size()]));
         //添加空构造函数
         MethodVisitor initMethod = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
         initMethod.visitCode();

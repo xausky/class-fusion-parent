@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
  * Created by xausky on 10/31/16.
  */
 public class JarParser {
-    public static void parser(File jar, Map<String,ClassNode> classes, Map<String,Set<String>> imps){
+    public static void parser(File jar, Map<String,ClassNode> classes, Map<String,Set<String>> itfs, Map<String,String> imps, Set<String> fusions){
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(jar);
@@ -26,7 +26,7 @@ public class JarParser {
                     InputStream inputStream = jarFile.getInputStream(jarEntry);
                     byte[] classData = IOUtils.toByteArray(inputStream);
                     inputStream.close();
-                    ClassParser.parser(classData,classes,imps);
+                    ClassParser.parser(classData,classes,itfs,imps,fusions);
                 }
             }
         }catch (Exception e){

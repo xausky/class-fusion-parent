@@ -8,8 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Created by xausky on 10/31/16.
  */
+
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FusionTemplate {
-    Class[] value();
-}
+public @interface FusionImpl {}

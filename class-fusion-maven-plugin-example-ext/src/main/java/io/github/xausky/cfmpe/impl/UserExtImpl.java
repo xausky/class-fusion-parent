@@ -1,12 +1,12 @@
 package io.github.xausky.cfmpe.impl;
 
-import io.github.xausky.cfc.FusionClass;
+import io.github.xausky.cfc.FusionImpl;
 import io.github.xausky.cfmpe.UserExtInterface;
 
 /**
  * Created by xausky on 10/28/16.
  */
-@FusionClass
+@FusionImpl
 public class UserExtImpl implements UserExtInterface {
     private String email;
 

@@ -2,6 +2,7 @@ package io.github.xausky.cfmp.visitor;
 
 import org.objectweb.asm.*;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -10,10 +11,10 @@ import java.util.TreeSet;
  */
 public class FusionClassVisitor extends ClassVisitor {
     private Set<String> anns = new TreeSet<String>();
-    private Set<String> imps;
+    private Collection<String> imps;
     private String name;
 
-    public FusionClassVisitor(ClassVisitor classVisitor, Set<String> imps, String name) {
+    public FusionClassVisitor(ClassVisitor classVisitor, Collection<String> imps, String name) {
         super(Opcodes.ASM5, classVisitor);
         this.imps = imps;
         this.name = name;
@@ -30,10 +31,14 @@ public class FusionClassVisitor extends ClassVisitor {
 
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-        //保证注解唯一
-        if(anns.add(desc)){
-            return super.visitAnnotation(desc, visible);
+        //去掉合成引入的FusionImpl注解
+        if(desc.equals("Lio/github/xausky/cfc/FusionImpl;")){
+            return null;
         }
-        return null;
+        //保证注解唯一
+        if(!anns.add(desc)){
+            return null;
+        }
+        return super.visitAnnotation(desc, visible);
     }
 }

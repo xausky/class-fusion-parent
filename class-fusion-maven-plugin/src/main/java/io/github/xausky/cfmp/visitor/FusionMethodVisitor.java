@@ -9,10 +9,10 @@ import java.util.*;
  * Created by xausky on 10/28/16.
  */
 public class FusionMethodVisitor extends MethodVisitor {
-    private Set<String> imps;
+    private Collection<String> imps;
     private String name;
 
-    public FusionMethodVisitor(MethodVisitor methodVisitor, Set<String> imps, String name) {
+    public FusionMethodVisitor(MethodVisitor methodVisitor, Collection<String> imps, String name) {
         super(Opcodes.ASM5, methodVisitor);
         this.imps = imps;
         this.name = name;

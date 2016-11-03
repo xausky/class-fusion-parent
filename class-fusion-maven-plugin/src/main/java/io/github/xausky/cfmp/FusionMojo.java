@@ -38,8 +38,12 @@ public class FusionMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
             long start = System.currentTimeMillis();
-            Map<String, ClassNode> classes = new TreeMap<String, ClassNode>();
-            Map<String, Set<String>> imps = new TreeMap<String, Set<String>>();
+            Map<String, ClassNode> classes = new HashMap<>();
+            Map<String, Set<String>> itfs = new HashMap<>();
+            Map<String, String> imps = new HashMap<>();
+            Set<String> fusions = new HashSet<>();
+
+            //artifactFiles必须保证有序
             Set<File> artifactFiles = new TreeSet<>();
 
             //获取所有依赖jar包和class路径
@@ -64,23 +68,23 @@ public class FusionMojo extends AbstractMojo {
                 getLog().info("artifact file   : " + file.getName());
                 if (file.isDirectory()) {
                     //目录形式的class路径
-                    PathParser.parser(file, classes, imps);
+                    PathParser.parser(file, classes, itfs, imps, fusions);
                 } else {
                     //Jar包形式的class路径
-                    JarParser.parser(file, classes, imps);
+                    JarParser.parser(file, classes, itfs, imps, fusions);
                 }
             }
 
             for (String key : classes.keySet()) {
                 getLog().info("cache class     : " + key);
             }
-            for (String key : imps.keySet()) {
+            for (String key : fusions) {
                 getLog().info("fusion class    : " + key);
-                for (String imp : imps.get(key)) {
-                    getLog().info("implements      : -- " + imp);
+                for (String itf : itfs.get(key)) {
+                    getLog().info("implements      : -- " + itf);
                 }
                 ClassWriter writer = new ClassWriter(0);
-                ClassFusion.fusion(writer, key, imps.get(key), classes);
+                ClassFusion.fusion(writer, key, itfs.get(key), imps, classes);
                 File classfile = new File(project.getArtifact().getFile().getAbsolutePath() + File.separator + key + ".class");
                 FileUtils.forceMkdir(classfile.getParentFile());
                 FileUtils.writeByteArrayToFile(classfile, writer.toByteArray());
