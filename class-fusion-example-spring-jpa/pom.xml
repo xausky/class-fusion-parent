@@ -9,23 +9,38 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>class-fusion-example</artifactId>
+    <artifactId>class-fusion-example-spring-jpa</artifactId>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>1.3.0.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.github.xausky</groupId>
             <artifactId>class-fusion-annotations</artifactId>
             <version>0.1.0</version>
         </dependency>
         <dependency>
-            <groupId>io.github.xausky</groupId>
-            <artifactId>class-fusion-example-base</artifactId>
-            <version>0.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.xausky</groupId>
-            <artifactId>class-fusion-example-ext</artifactId>
-            <version>0.1.0</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -49,9 +64,15 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.5.0</version>
                 <configuration>
-                    <mainClass>io.github.xausky.io.github.xausky.cfmpe.Main</mainClass>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>io.github.xausky.cfmpe.Example</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
 </project>

@@ -1,0 +1,1 @@
+insert into log(message) values ('The test message')

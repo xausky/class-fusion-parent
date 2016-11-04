@@ -21,5 +21,6 @@
         <module>class-fusion-example-base</module>
         <module>class-fusion-example</module>
         <module>class-fusion-example-spring</module>
+        <module>class-fusion-example-spring-jpa</module>
     </modules>
 </project>

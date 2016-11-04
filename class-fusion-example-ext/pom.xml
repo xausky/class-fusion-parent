@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>io.github.xausky</groupId>
-            <artifactId>class-fusion-maven-plugin-example-base</artifactId>
+            <artifactId>class-fusion-example-base</artifactId>
             <version>0.1.0</version>
         </dependency>
     </dependencies>
