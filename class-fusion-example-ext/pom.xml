@@ -3,17 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>class-fusion-maven-plugin-parent</artifactId>
+        <artifactId>class-fusion-parent</artifactId>
         <groupId>io.github.xausky</groupId>
         <version>0.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>class-fusion-maven-plugin-example-base</artifactId>
+    <artifactId>class-fusion-example-ext</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>io.github.xausky</groupId>
             <artifactId>class-fusion-annotations</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.xausky</groupId>
+            <artifactId>class-fusion-maven-plugin-example-base</artifactId>
             <version>0.1.0</version>
         </dependency>
     </dependencies>

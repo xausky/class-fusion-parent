@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.xausky</groupId>
-    <artifactId>class-fusion-maven-plugin-parent</artifactId>
+    <artifactId>class-fusion-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.1.0</version>
 
@@ -17,9 +17,9 @@
     <modules>
         <module>class-fusion-annotations</module>
         <module>class-fusion-maven-plugin</module>
-        <module>class-fusion-maven-plugin-example-ext</module>
-        <module>class-fusion-maven-plugin-example-base</module>
-        <module>class-fusion-maven-plugin-example</module>
-        <module>class-fusion-maven-plugin-example-spring</module>
+        <module>class-fusion-example-ext</module>
+        <module>class-fusion-example-base</module>
+        <module>class-fusion-example</module>
+        <module>class-fusion-example-spring</module>
     </modules>
 </project>
