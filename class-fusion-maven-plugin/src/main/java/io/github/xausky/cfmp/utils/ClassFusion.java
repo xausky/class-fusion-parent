@@ -24,7 +24,10 @@ public class ClassFusion {
         Set<String> methods = new HashSet<>();
         Set<String> fields = new HashSet<>();
         for(String itf:itfs){
-            impls.add(imps.get(itf));
+            String imp = imps.get(itf);
+            if(imp != null){
+                impls.add(imp);
+            }
         }
         impls.add(name);
         FusionClassVisitor visitor = new FusionClassVisitor(writer, impls, name);
