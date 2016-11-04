@@ -9,9 +9,9 @@ import javax.persistence.Entity;
  */
 @Entity
 @Fusion
-public class Log implements LogInterface{
+public class Log implements LogInterface,LogExtInterface{
     @Override
     public String toString() {
-        return String.format("Log{ id:%s, message:%s }",getId(),getMessage());
+        return String.format("Log{ id:%s, message:%s, owner:%s }",getId(),getMessage(),getOwner());
     }
 }

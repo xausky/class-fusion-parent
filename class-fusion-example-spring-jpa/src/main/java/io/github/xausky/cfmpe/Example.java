@@ -18,7 +18,7 @@ import java.util.Iterator;
 public class Example implements CommandLineRunner {
     Logger logger = LoggerFactory.getLogger(Example.class);
     @Autowired
-    LogRepository logRepository;
+    LogExtRepository logExtRepository;
 
     public static void main(String[] args){
         SpringApplication.run(Example.class,args);
@@ -26,7 +26,11 @@ public class Example implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        Log log = logRepository.findOne(1);
-        logger.info(log.toString());
+        Log log = logExtRepository.findOne(1);
+        logger.info("findOne:"+log);
+        Iterable<Log> logs = logExtRepository.findByOwner("xausky");
+        for(Log i:logs){
+            logger.info("findByOwner:"+i);
+        }
     }
 }
