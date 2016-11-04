@@ -1,7 +1,6 @@
 package io.github.xausky.cfmpe.impl;
 
-import io.github.xausky.cfc.FusionImpl;
-import io.github.xausky.cfmpe.MenuInterface;
+import io.github.xausky.cfa.FusionImpl;
 import io.github.xausky.cfmpe.User;
 import io.github.xausky.cfmpe.MenuUserInterface;
 import org.springframework.beans.factory.annotation.Autowired;

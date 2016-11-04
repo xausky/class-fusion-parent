@@ -9,5 +9,5 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>class-fusion-core</artifactId>
+    <artifactId>class-fusion-annotations</artifactId>
 </project>

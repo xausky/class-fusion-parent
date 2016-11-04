@@ -10,7 +10,7 @@ public class FusionDependencyFilter {
     public static boolean include(DependencyNode root) {
         for (DependencyNode node : root.getChildren()) {
             Artifact artifact = node.getArtifact();
-            if(artifact.getGroupId().equals("io.github.xausky") && artifact.getArtifactId().equals("class-fusion-core")){
+            if(artifact.getGroupId().equals("io.github.xausky") && artifact.getArtifactId().equals("class-fusion-annotations")){
                 return true;
             }
         }

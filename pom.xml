@@ -15,7 +15,7 @@
     </properties>
 
     <modules>
-        <module>class-fusion-core</module>
+        <module>class-fusion-annotations</module>
         <module>class-fusion-maven-plugin</module>
         <module>class-fusion-maven-plugin-example-ext</module>
         <module>class-fusion-maven-plugin-example-base</module>

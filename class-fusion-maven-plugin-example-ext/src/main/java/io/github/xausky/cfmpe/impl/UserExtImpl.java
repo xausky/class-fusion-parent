@@ -1,6 +1,6 @@
 package io.github.xausky.cfmpe.impl;
 
-import io.github.xausky.cfc.FusionImpl;
+import io.github.xausky.cfa.FusionImpl;
 import io.github.xausky.cfmpe.UserExtInterface;
 
 /**

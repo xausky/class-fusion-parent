@@ -32,7 +32,7 @@ public class FusionClassVisitor extends ClassVisitor {
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         //去掉合成引入的FusionImpl注解
-        if(desc.equals("Lio/github/xausky/cfc/FusionImpl;")){
+        if(desc.equals("Lio/github/xausky/cfa/FusionImpl;")){
             return null;
         }
         //保证注解唯一

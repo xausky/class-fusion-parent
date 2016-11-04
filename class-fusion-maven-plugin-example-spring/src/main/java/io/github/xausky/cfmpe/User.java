@@ -1,8 +1,6 @@
 package io.github.xausky.cfmpe;
 
-import io.github.xausky.cfc.Fusion;
-import io.github.xausky.cfmpe.impl.UserExtImpl;
-import io.github.xausky.cfmpe.impl.UserImpl;
+import io.github.xausky.cfa.Fusion;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,7 +1,6 @@
 package io.github.xausky.cfmpe;
 
-import io.github.xausky.cfc.Fusion;
-import io.github.xausky.cfmpe.impl.MenuImpl;
+import io.github.xausky.cfa.Fusion;
 
 /**
  * Created by xausky on 11/2/16.

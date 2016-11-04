@@ -47,7 +47,7 @@ public class ClassParser {
         List<AnnotationNode> anns = root.visibleAnnotations;
         if(anns != null) {
             for (AnnotationNode ann : anns) {
-                if (ann.desc.equals("Lio/github/xausky/cfc/FusionImpl;")) {
+                if (ann.desc.equals("Lio/github/xausky/cfa/FusionImpl;")) {
                     return root.interfaces;
                 }
             }
@@ -60,7 +60,7 @@ public class ClassParser {
         List<AnnotationNode> anns = root.visibleAnnotations;
         if(anns != null) {
             for (AnnotationNode ann : anns) {
-                if (ann.desc.equals("Lio/github/xausky/cfc/Fusion;")) {
+                if (ann.desc.equals("Lio/github/xausky/cfa/Fusion;")) {
                     return root.interfaces;
                 }
             }
