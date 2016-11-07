@@ -9,11 +9,22 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
+ * 解析一个class文件的工具类.
  * Created by xausky on 10/31/16.
  */
 public class ClassParser {
+    /**
+     * 解析一个class文件
+     * @param data class文件字节数据
+     * @param classes class缓存
+     * @param itfs 目标类与接口映射
+     * @param imps 接口与实现映射
+     * @param fusions 目标类名集合
+     */
     public static void parser(byte[] data, Map<String,ClassNode> classes,
-                              Map<String,Set<String>> itfs, Map<String,String> imps, Set<String> fusions){
+                              Map<String,Set<String>> itfs,
+                              Map<String,String> imps,
+                              Set<String> fusions){
         try{
             ClassReader reader = new ClassReader(data);
             ClassNode root = new ClassNode();
@@ -43,7 +54,7 @@ public class ClassParser {
 
 
     //是否是FusionClass并解析出接口
-    public static List<String> parserFusionImpl(ClassNode root){
+    private static List<String> parserFusionImpl(ClassNode root){
         List<AnnotationNode> anns = root.visibleAnnotations;
         if(anns != null) {
             for (AnnotationNode ann : anns) {
@@ -56,7 +67,7 @@ public class ClassParser {
     }
 
     //是否是FusionTemplate并解析出接口
-    public static List<String> parserFusion(ClassNode root){
+    private static List<String> parserFusion(ClassNode root){
         List<AnnotationNode> anns = root.visibleAnnotations;
         if(anns != null) {
             for (AnnotationNode ann : anns) {
