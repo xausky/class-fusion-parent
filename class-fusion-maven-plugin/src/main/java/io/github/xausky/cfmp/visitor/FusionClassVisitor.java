@@ -2,7 +2,9 @@ package io.github.xausky.cfmp.visitor;
 
 import org.objectweb.asm.*;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -12,7 +14,9 @@ import java.util.TreeSet;
  */
 public class FusionClassVisitor extends ClassVisitor {
     private Set<String> anns = new TreeSet<String>();
+    private Set<String> interfaces = new TreeSet<>();
     private Collection<String> imps;
+    private String superName;
     private String name;
 
     /**
@@ -53,5 +57,19 @@ public class FusionClassVisitor extends ClassVisitor {
             return null;
         }
         return super.visitAnnotation(desc, visible);
+    }
+
+    @Override
+    public void visit(int version, int access, String name,
+                      String signature, String superName, String[] interfaces) {
+        //合并interface,保存superName
+        this.superName = superName;
+        this.interfaces.addAll(Arrays.asList(interfaces));
+        super.visit(version, access, this.name, signature, superName,
+                (String[]) this.interfaces.toArray(new String[this.interfaces.size()]));
+    }
+
+    public String getSuperName() {
+        return superName;
     }
 }

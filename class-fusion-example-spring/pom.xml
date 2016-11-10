@@ -49,7 +49,12 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.5.0</version>
                 <configuration>
-                    <mainClass>io.github.xausky.cfmpe.Example</mainClass>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>io.github.xausky.cfmpe.Example</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>

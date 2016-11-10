@@ -77,17 +77,17 @@ public class ClassFusion {
                 throw new ClassNotFoundException("fusion class not found:"+imp);
             }
         }
-        //修改定义，添加接口
+        /*修改定义，添加接口
         writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC,
                 name, null, "java/lang/Object",
-                (String[]) itfs.toArray(new String[itfs.size()]));
+                (String[]) itfs.toArray(new String[itfs.size()]));*/
         //添加空构造函数
         MethodVisitor initMethod = writer.visitMethod(Opcodes.ACC_PUBLIC,
                 "<init>", "()V", null, null);
         initMethod.visitCode();
         initMethod.visitVarInsn(Opcodes.ALOAD, 0);
         initMethod.visitMethodInsn(Opcodes.INVOKESPECIAL,
-                "java/lang/Object", "<init>", "()V", false);
+                visitor.getSuperName(), "<init>", "()V", false);
         initMethod.visitInsn(Opcodes.RETURN);
         initMethod.visitMaxs(1, 1);
         initMethod.visitEnd();
