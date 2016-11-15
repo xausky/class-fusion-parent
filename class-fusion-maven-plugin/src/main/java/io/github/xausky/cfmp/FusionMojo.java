@@ -97,7 +97,7 @@ public class FusionMojo extends AbstractMojo {
             for (String key : fusions) {
                 getLog().info("fusion class    : " + key);
                 for (String itf : itfs.get(key)) {
-                    getLog().info("implements      : -- " + itf);
+                    getLog().info("implements      : -- " + itf + " --> " + imps.get(itf));
                 }
                 ClassWriter writer = new ClassWriter(0);
                 ClassFusion.fusion(writer, key, itfs.get(key), imps, classes);
