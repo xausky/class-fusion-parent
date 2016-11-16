@@ -22,8 +22,10 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,9 +55,10 @@ public class FusionMojo extends AbstractMojo {
             Map<String, Set<String>> itfs = new HashMap<>();
             Map<String, String> imps = new HashMap<>();
             Set<String> fusions = new HashSet<>();
+            Artifact projectArtifact = project.getArtifact();
 
             //artifactFiles必须保证有序
-            Set<File> artifactFiles = new TreeSet<>();
+            List<File> artifactFiles = new LinkedList<>();
 
             //获取所有依赖jar包和class路径
             DependencyNode rootNode = dependencyTreeBuilder.buildDependencyTree(project,
@@ -72,16 +75,21 @@ public class FusionMojo extends AbstractMojo {
                 //排除不依赖class-fusion-core的artifact
                 if (FusionDependencyFilter.include(node)) {
                     Artifact artifact = node.getArtifact();
-                    File file = artifact.getFile();
-                    if (file == null) {
-                        file = localRepository.find(artifact).getFile();
+                    //排除当前项目的Artifact
+                    if(!projectArtifact.equals(artifact)) {
+                        File file = artifact.getFile();
+                        if (file == null) {
+                            file = localRepository.find(artifact).getFile();
+                        }
+                        artifactFiles.add(file);
                     }
-                    artifactFiles.add(file);
                 }
             }
+            //添加当前项目Artifact,保证优先级
+            artifactFiles.add(projectArtifact.getFile());
             getLog().info(String.format("artifacts count : %d artifacts", artifactFiles.size()));
             for (File file : artifactFiles) {
-                getLog().info("artifact file   : " + file.getName());
+                getLog().info("artifact file   : -- " + file.getName());
                 if (file.isDirectory()) {
                     //目录形式的class路径
                     PathParser.parser(file, classes, itfs, imps, fusions);
@@ -101,10 +109,19 @@ public class FusionMojo extends AbstractMojo {
                 }
                 ClassWriter writer = new ClassWriter(0);
                 ClassFusion.fusion(writer, key, itfs.get(key), imps, classes);
-                File classfile = new File(project.getArtifact().getFile().getAbsolutePath()
+                File fusionFile = new File(projectArtifact.getFile().getAbsolutePath()
                         + File.separator + key + ".class");
-                FileUtils.forceMkdir(classfile.getParentFile());
-                FileUtils.writeByteArrayToFile(classfile, writer.toByteArray());
+                if(fusionFile.exists()){
+                    //备份原class文件
+                    File originFile = new File(projectArtifact.getFile().getAbsolutePath()
+                            + File.separator + key + ".class.origin");
+                    if(!originFile.exists()) {
+                        FileUtils.moveFile(fusionFile, originFile);
+                    }
+                }else {
+                    FileUtils.forceMkdir(fusionFile.getParentFile());
+                }
+                FileUtils.writeByteArrayToFile(fusionFile, writer.toByteArray());
             }
             getLog().info(String.format("fusion time     : %d ms.",
                     System.currentTimeMillis() - start));

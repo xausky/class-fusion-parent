@@ -52,6 +52,10 @@ public class FusionClassVisitor extends ClassVisitor {
         if(desc.equals("Lio/github/xausky/cfa/FusionImpl;")){
             return null;
         }
+        //去掉合成引入的Fusion注解
+        if(desc.equals("Lio/github/xausky/cfa/Fusion;")){
+            return null;
+        }
         //保证注解唯一
         if(!anns.add(desc)){
             return null;
