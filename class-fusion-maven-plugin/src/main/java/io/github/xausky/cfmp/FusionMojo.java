@@ -12,6 +12,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -35,7 +36,7 @@ import java.util.TreeSet;
  * 插件入口类.
  * Created by xausky on 10/31/16.
  */
-@Mojo(name = "fusion")
+@Mojo(name = "fusion", defaultPhase = LifecyclePhase.COMPILE)
 public class FusionMojo extends AbstractMojo {
 
     @Component
