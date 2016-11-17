@@ -35,7 +35,8 @@ public class JarParser {
             Enumeration<JarEntry> jarEntrys = jarFile.entries();
             while (jarEntrys.hasMoreElements()){
                 JarEntry jarEntry = jarEntrys.nextElement();
-                if(jarEntry.getName().endsWith(".class")){
+                //class文件或者备份文件.
+                if(jarEntry.getName().endsWith(".class") || jarEntry.getName().endsWith(".class.origin") ){
                     InputStream inputStream = jarFile.getInputStream(jarEntry);
                     byte[] classData = IOUtils.toByteArray(inputStream);
                     inputStream.close();

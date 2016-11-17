@@ -25,13 +25,8 @@ public class PathParser {
                               Map<String,String> imps,
                               Set<String> fusions){
         try {
-            Collection<File> files = FileUtils.listFiles(path,new String[]{"class"},true);
+            Collection<File> files = FileUtils.listFiles(path,new String[]{"class","class.origin"},true);
             for(File file:files){
-                //查找备份文件,如果存在则使用备份文件.
-                File originFile = new File(file.getAbsolutePath()+".origin");
-                if(originFile.exists()){
-                    file = originFile;
-                }
                 byte[] classData = FileUtils.readFileToByteArray(file);
                 ClassParser.parser(classData,classes,itfs,imps, fusions);
             }
